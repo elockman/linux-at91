@@ -2255,7 +2255,7 @@ remove_card:
 err:
 	mmc_detach_bus(host);
 
-	pr_err("%s: error %d whilst initialising MMC card\n",
+	pr_err("%s: error %d whilst initialising XEAL MMC card\n",
 		mmc_hostname(host), err);
 
 	return err;
