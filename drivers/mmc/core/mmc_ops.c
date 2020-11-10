@@ -567,12 +567,15 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
 		cmd.sanitize_busy = true;
 
 	err = mmc_wait_for_cmd(host, &cmd, MMC_CMD_RETRIES);
-	if (err)
+	if (err){
+        pr_err("XEAL OP-ERR: mmc_wait_for_cmd\n");
 		goto out;
-
+    }
 	/* No need to check card status in case of unblocking command */
-	if (!use_busy_signal)
+	if (!use_busy_signal){
+        pr_err("XEAL OP-ERR: use_busy_signal\n");
 		goto out;
+    }
 
 	/*If SPI or used HW busy detection above, then we don't need to poll. */
 	if (((host->caps & MMC_CAP_WAIT_WHILE_BUSY) && use_r1b_resp) ||
@@ -581,9 +584,10 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
 
 	/* Let's try to poll to find out when the command is completed. */
 	err = mmc_poll_for_busy(card, timeout_ms, send_status, retry_crc_err);
-	if (err)
+	if (err){
+        pr_err("XEAL OP-ERR: mmc_poll_for_busy\n");
 		goto out;
-
+    }
 out_tim:
 	/* Switch to new timing before check switch status. */
 	if (timing)
@@ -591,8 +595,10 @@ out_tim:
 
 	if (send_status) {
 		err = mmc_switch_status(card);
-		if (err && timing)
+		if (err && timing){
+            pr_err("XEAL OP-ERR: mmc_switch_status\n");
 			mmc_set_timing(host, old_timing);
+        }
 	}
 out:
 	mmc_retune_release(host);
