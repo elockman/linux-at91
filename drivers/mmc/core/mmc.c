@@ -75,9 +75,9 @@ static int mmc_decode_cid(struct mmc_card *card)
 	 */
 	switch (card->csd.mmca_vsn) {
 	case 0: /* MMC v1.0 - v1.2 */
-		pr_err("XEAL: MMC v1.0 - v1.2\n");
+		//pr_err("XEAL: MMC v1.0 - v1.2\n");
     case 1: /* MMC v1.4 */
-		pr_err("XEAL: MMC v1.4\n");
+		//pr_err("XEAL: MMC v1.4\n");
 		card->cid.manfid	= UNSTUFF_BITS(resp, 104, 24);
 		card->cid.prod_name[0]	= UNSTUFF_BITS(resp, 96, 8);
 		card->cid.prod_name[1]	= UNSTUFF_BITS(resp, 88, 8);
@@ -94,11 +94,11 @@ static int mmc_decode_cid(struct mmc_card *card)
 		break;
 
 	case 2: /* MMC v2.0 - v2.2 */
-		pr_err("XEAL: MMC v2\n");
+		//pr_err("XEAL: MMC v2\n");
 	case 3: /* MMC v3.1 - v3.3 */
-		pr_err("XEAL: MMC v3\n");
+		//pr_err("XEAL: MMC v3\n");
 	case 4: /* MMC v4 */
-		pr_err("XEAL: MMC v4\n");
+		//pr_err("XEAL: MMC v4\n");
 		card->cid.manfid	= UNSTUFF_BITS(resp, 120, 8);
 		card->cid.oemid		= UNSTUFF_BITS(resp, 104, 16);
 		card->cid.prod_name[0]	= UNSTUFF_BITS(resp, 96, 8);
@@ -197,56 +197,56 @@ static void mmc_select_card_type(struct mmc_card *card)
 
 	if (caps & MMC_CAP_MMC_HIGHSPEED &&
 	    card_type & EXT_CSD_CARD_TYPE_HS_26) {
-		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS_26\n");
+		//pr_err("XEAL: EXT_CSD_CARD_TYPE_HS_26\n");
 		hs_max_dtr = MMC_HIGH_26_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS_26;
 	}
 
 	if (caps & MMC_CAP_MMC_HIGHSPEED &&
 	    card_type & EXT_CSD_CARD_TYPE_HS_52) {
-		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS_52\n");
+		//pr_err("XEAL: EXT_CSD_CARD_TYPE_HS_52\n");
 		hs_max_dtr = MMC_HIGH_52_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS_52;
 	}
 
 	if (caps & (MMC_CAP_1_8V_DDR | MMC_CAP_3_3V_DDR) &&
 	    card_type & EXT_CSD_CARD_TYPE_DDR_1_8V) {
-		pr_err("XEAL: EXT_CSD_CARD_TYPE_DDR_1_8V\n");
+		//pr_err("XEAL: EXT_CSD_CARD_TYPE_DDR_1_8V\n");
 		hs_max_dtr = MMC_HIGH_DDR_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_DDR_1_8V;
 	}
 
 	if (caps & MMC_CAP_1_2V_DDR &&
 	    card_type & EXT_CSD_CARD_TYPE_DDR_1_2V) {
-		pr_err("XEAL: EXT_CSD_CARD_TYPE_DDR_1_2V\n");
+		//pr_err("XEAL: EXT_CSD_CARD_TYPE_DDR_1_2V\n");
 		hs_max_dtr = MMC_HIGH_DDR_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_DDR_1_2V;
 	}
 
 	if (caps2 & MMC_CAP2_HS200_1_8V_SDR &&
 	    card_type & EXT_CSD_CARD_TYPE_HS200_1_8V) {
-		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS200_1_8V\n");
+		//pr_err("XEAL: EXT_CSD_CARD_TYPE_HS200_1_8V\n");
 		hs200_max_dtr = MMC_HS200_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS200_1_8V;
 	}
 
 	if (caps2 & MMC_CAP2_HS200_1_2V_SDR &&
 	    card_type & EXT_CSD_CARD_TYPE_HS200_1_2V) {
-		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS200_1_2V\n");
+		//pr_err("XEAL: EXT_CSD_CARD_TYPE_HS200_1_2V\n");
 		hs200_max_dtr = MMC_HS200_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS200_1_2V;
 	}
 
 	if (caps2 & MMC_CAP2_HS400_1_8V &&
 	    card_type & EXT_CSD_CARD_TYPE_HS400_1_8V) {
-		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS400_1_8V\n");
+		//pr_err("XEAL: EXT_CSD_CARD_TYPE_HS400_1_8V\n");
 		hs200_max_dtr = MMC_HS200_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS400_1_8V;
 	}
 
 	if (caps2 & MMC_CAP2_HS400_1_2V &&
 	    card_type & EXT_CSD_CARD_TYPE_HS400_1_2V) {
-		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS400_1_2V\n");
+		//pr_err("XEAL: EXT_CSD_CARD_TYPE_HS400_1_2V\n");
 		hs200_max_dtr = MMC_HS200_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS400_1_2V;
 	}
@@ -254,7 +254,7 @@ static void mmc_select_card_type(struct mmc_card *card)
 	if ((caps2 & MMC_CAP2_HS400_ES) &&
 	    card->ext_csd.strobe_support &&
 	    (avail_type & EXT_CSD_CARD_TYPE_HS400)) {
-		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS400\n");
+		//pr_err("XEAL: EXT_CSD_CARD_TYPE_HS400\n");
 		avail_type |= EXT_CSD_CARD_TYPE_HS400ES;
     }
 
@@ -596,7 +596,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 	/* eMMC v4.5 or later */
 	card->ext_csd.generic_cmd6_time = DEFAULT_CMD6_TIMEOUT_MS;
 	if (card->ext_csd.rev >= 6) {
-		pr_err("XEAL: eMMC v4.5 or later.\n");
+		//pr_err("XEAL: eMMC v4.5 or later.\n");
 		card->ext_csd.feature_support |= MMC_DISCARD_FEATURE;
 
 		card->ext_csd.generic_cmd6_time = 10 *
@@ -634,7 +634,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 
 	/* eMMC v5 or later */
 	if (card->ext_csd.rev >= 7) {
-		pr_err("XEAL: eMMC v5 or later.\n");
+		//pr_err("XEAL: eMMC v5 or later.\n");
 		memcpy(card->ext_csd.fwrev, &ext_csd[EXT_CSD_FIRMWARE_VERSION],
 		       MMC_FIRMWARE_LEN);
 		card->ext_csd.ffu_capable =
@@ -650,7 +650,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 
 	/* eMMC v5.1 or later */
 	if (card->ext_csd.rev >= 8) {
-		pr_err("XEAL: eMMC v5.1 or later.\n");
+		//pr_err("XEAL: eMMC v5.1 or later.\n");
 		card->ext_csd.cmdq_support = ext_csd[EXT_CSD_CMDQ_SUPPORT] &
 					     EXT_CSD_CMDQ_SUPPORTED;
 		card->ext_csd.cmdq_depth = (ext_csd[EXT_CSD_CMDQ_DEPTH] &
@@ -685,7 +685,7 @@ static int mmc_read_ext_csd(struct mmc_card *card)
 		if ((err != -EINVAL)
 		 && (err != -ENOSYS)
 		 && (err != -EFAULT)){
-            pr_err("XEAL: can't do the switch\n");
+            //pr_err("XEAL: can't do the switch\n");
 			return err;
         }
 
@@ -933,7 +933,7 @@ static int __mmc_select_powerclass(struct mmc_card *card,
 				EXT_CSD_PWR_CL_8BIT_SHIFT;
     }
 	else {
-        pr_err("XEAL: EXT_CSD_PWR_CL_4BIT_MASK\n");
+        //pr_err("XEAL: EXT_CSD_PWR_CL_4BIT_MASK\n");
 		pwrclass_val = (pwrclass_val & EXT_CSD_PWR_CL_4BIT_MASK) >>
 				EXT_CSD_PWR_CL_4BIT_SHIFT;
     }
@@ -969,7 +969,7 @@ static int mmc_select_powerclass(struct mmc_card *card)
 		ext_csd_bits = (bus_width == MMC_BUS_WIDTH_8) ?
 			EXT_CSD_DDR_BUS_WIDTH_8 : EXT_CSD_DDR_BUS_WIDTH_4;
     }else{
-        pr_err("XEAL: NOT DDR\n");
+        //pr_err("XEAL: NOT DDR\n");
 		ext_csd_bits = (bus_width == MMC_BUS_WIDTH_8) ?
 			EXT_CSD_BUS_WIDTH_8 :  EXT_CSD_BUS_WIDTH_4;
     }
@@ -1484,7 +1484,7 @@ static int mmc_select_hs200(struct mmc_card *card)
 				   card->ext_csd.generic_cmd6_time, 0,
 				   true, false, true);
 		if (err){
-            	pr_err("XEAL ERR: mmc_select_bus_width\n");
+            	//pr_err("XEAL ERR: mmc_select_bus_width\n");
                 goto err;
         }
 		old_timing = host->ios.timing;
@@ -1597,7 +1597,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	/* The extra bit indicates that we support high capacity */
 	err = mmc_send_op_cond(host, ocr | (1 << 30), &rocr);
 	if (err){
-       	pr_err("XEAL ERR: mmc_send_op_cond\n");
+       	//pr_err("XEAL ERR: mmc_send_op_cond\n");
 		goto err;
     }
 	/*
@@ -1606,7 +1606,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	if (mmc_host_is_spi(host)) {
 		err = mmc_spi_set_crc(host, use_spi_crc);
 		if (err){
-            pr_err("XEAL ERR: mmc_spi_set_crc\n");
+            //pr_err("XEAL ERR: mmc_spi_set_crc\n");
 			goto err;
         }
 	}
@@ -1616,7 +1616,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	 */
 	err = mmc_send_cid(host, cid);
 	if (err){
-        pr_err("XEAL ERR: mmc_send_cid\n");
+        //pr_err("XEAL ERR: mmc_send_cid\n");
 		goto err;
     }
 	if (oldcard) {
@@ -1624,7 +1624,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 			pr_debug("%s: Perhaps the card was replaced\n",
 				mmc_hostname(host));
 			err = -ENOENT;
-            pr_err("XEAL ERR: mmc_hostname\n");
+            //pr_err("XEAL ERR: mmc_hostname\n");
 			goto err;
 		}
 
@@ -1636,7 +1636,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 		card = mmc_alloc_card(host, &mmc_type);
 		if (IS_ERR(card)) {
 			err = PTR_ERR(card);
-            pr_err("XEAL ERR: mmc_alloc_card\n");
+            //pr_err("XEAL ERR: mmc_alloc_card\n");
 			goto err;
 		}
 
@@ -1658,7 +1658,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	if (!mmc_host_is_spi(host)) {
 		err = mmc_set_relative_addr(card);
 		if (err){
-            pr_err("XEAL ERR: mmc_set_relative_addr\n");
+            //pr_err("XEAL ERR: mmc_set_relative_addr\n");
 			goto free_card;
         }
 		mmc_set_bus_mode(host, MMC_BUSMODE_PUSHPULL);
@@ -1670,17 +1670,17 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 		 */
 		err = mmc_send_csd(card, card->raw_csd);
 		if (err){
-            pr_err("XEAL ERR: mmc_send_csd\n");
+            //pr_err("XEAL ERR: mmc_send_csd\n");
 			goto free_card;
         }
 		err = mmc_decode_csd(card);
 		if (err){
-            pr_err("XEAL ERR: mmc_decode_csd\n");
+            //pr_err("XEAL ERR: mmc_decode_csd\n");
 			goto free_card;
         }
 		err = mmc_decode_cid(card);
 		if (err){
-            pr_err("XEAL ERR: mmc_decode_cid\n");
+            //pr_err("XEAL ERR: mmc_decode_cid\n");
 			goto free_card;
         }
     }
@@ -1698,7 +1698,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	if (!mmc_host_is_spi(host)) {
 		err = mmc_select_card(card);
 		if (err){
-            pr_err("XEAL ERR: mmc_select_card\n");
+            //pr_err("XEAL ERR: mmc_select_card\n");
 			goto free_card;
         }
 	}
@@ -1707,7 +1707,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 		/* Read extended CSD. */
 		err = mmc_read_ext_csd(card);
 		if (err){
-            pr_err("XEAL ERR: mmc_read_ext_csd\n");
+            //pr_err("XEAL ERR: mmc_read_ext_csd\n");
 			goto free_card;
         }
 		/*
@@ -1730,7 +1730,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 				 card->ext_csd.generic_cmd6_time);
 
 		if (err && err != -EBADMSG){
-            pr_err("XEAL ERR: mmc_switch\n");
+            //pr_err("XEAL ERR: mmc_switch\n");
 			goto free_card;
         }
 		if (err) {
@@ -1762,7 +1762,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 				 card->ext_csd.part_config,
 				 card->ext_csd.part_time);
 		if (err && err != -EBADMSG){
-            pr_err("XEAL ERR: mmc_switch2\n");
+            //pr_err("XEAL ERR: mmc_switch2\n");
 			goto free_card;
         }
 	}
@@ -1776,7 +1776,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 				 EXT_CSD_POWER_ON,
 				 card->ext_csd.generic_cmd6_time);
 		if (err && err != -EBADMSG){
-            pr_err("XEAL ERR: mmc_switch3\n");
+            //pr_err("XEAL ERR: mmc_switch3\n");
 			goto free_card;
         }
 		/*
@@ -1800,18 +1800,18 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	 */
 	err = mmc_select_timing(card);
 	if (err){
-        pr_err("XEAL ERR: mmc_select_timing\n");
+        //pr_err("XEAL ERR: mmc_select_timing\n");
 		goto free_card;
     }
 	if (mmc_card_hs200(card)) {
 		err = mmc_hs200_tuning(card);
 		if (err){
-            pr_err("XEAL ERR: mmc_hs200_tuning\n");
+            //pr_err("XEAL ERR: mmc_hs200_tuning\n");
 			goto free_card;
         }
 		err = mmc_select_hs400(card);
 		if (err){
-            pr_err("XEAL ERR: mmc_select_hs400\n");
+            //pr_err("XEAL ERR: mmc_select_hs400\n");
 			goto free_card;
         }
 	} else if (!mmc_card_hs400es(card)) {
@@ -1820,7 +1820,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 		if (err > 0 && mmc_card_hs(card)) {
 			err = mmc_select_hs_ddr(card);
 			if (err){
-                pr_err("XEAL ERR: mmc_select_hs_ddr\n");
+                //pr_err("XEAL ERR: mmc_select_hs_ddr\n");
 				goto free_card;
             }
 		}
@@ -1839,7 +1839,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 				EXT_CSD_HPI_MGMT, 1,
 				card->ext_csd.generic_cmd6_time);
 		if (err && err != -EBADMSG){
-            pr_err("XEAL ERR: mmc_switch4\n");
+            //pr_err("XEAL ERR: mmc_switch4\n");
 			goto free_card;
         }
 		if (err) {
@@ -1866,7 +1866,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
 				EXT_CSD_CACHE_CTRL, 1, timeout_ms);
 		if (err && err != -EBADMSG){
-            pr_err("XEAL ERR: mmc_switch5\n");
+            //pr_err("XEAL ERR: mmc_switch5\n");
 			goto free_card;
         }
 
@@ -1891,7 +1891,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	if (card->ext_csd.cmdq_support && host->caps2 & MMC_CAP2_CQE) {
 		err = mmc_cmdq_enable(card);
 		if (err && err != -EBADMSG){
-            pr_err("XEAL ERR: mmc_switch6\n");
+            //pr_err("XEAL ERR: mmc_switch6\n");
 			goto free_card;
         }
 		if (err) {
@@ -1926,7 +1926,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 		pr_err("%s: Host failed to negotiate down from 3.3V\n",
 			mmc_hostname(host));
 		err = -EINVAL;
-        pr_err("XEAL ERR: MMC_CAP2_AVOID_3_3V\n");
+        //pr_err("XEAL ERR: MMC_CAP2_AVOID_3_3V\n");
 		goto free_card;
 	}
 
@@ -2279,7 +2279,7 @@ int mmc_attach_mmc(struct mmc_host *host)
 	if (mmc_host_is_spi(host)) {
 		err = mmc_spi_read_ocr(host, 1, &ocr);
 		if (err){
-            pr_err("XEAL ERR: mmc_spi_read_ocr\n");
+            //pr_err("XEAL ERR: mmc_spi_read_ocr\n");
 			goto err;
         }
 	}
@@ -2291,7 +2291,7 @@ int mmc_attach_mmc(struct mmc_host *host)
 	 */
 	if (!rocr) {
 		err = -EINVAL;
-        pr_err("XEAL ERR: rocr\n");
+        //pr_err("XEAL ERR: rocr\n");
 		goto err;
 	}
 
@@ -2300,7 +2300,7 @@ int mmc_attach_mmc(struct mmc_host *host)
 	 */
 	err = mmc_init_card(host, rocr, NULL);
 	if (err){
-        pr_err("XEAL ERR: mmc_init_card\n");
+        //pr_err("XEAL ERR: mmc_init_card\n");
 		goto err;
     }
 	mmc_release_host(host);
