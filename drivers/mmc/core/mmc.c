@@ -26,8 +26,8 @@
 #include "sd_ops.h"
 #include "pwrseq.h"
 
-#define DEFAULT_CMD6_TIMEOUT_MS	500
-#define MIN_CACHE_EN_TIMEOUT_MS 1600
+#define DEFAULT_CMD6_TIMEOUT_MS	750 //500
+#define MIN_CACHE_EN_TIMEOUT_MS 2000//1600
 
 static const unsigned int tran_exp[] = {
 	10000,		100000,		1000000,	10000000,
@@ -928,7 +928,7 @@ static int __mmc_select_powerclass(struct mmc_card *card,
 	}
 
 	if (bus_width & (EXT_CSD_BUS_WIDTH_8 | EXT_CSD_DDR_BUS_WIDTH_8)) {
-        pr_err("XEAL: EXT_CSD_DDR_BUS_WIDTH_8\n");
+        //pr_err("XEAL: EXT_CSD_DDR_BUS_WIDTH_8\n");
 		pwrclass_val = (pwrclass_val & EXT_CSD_PWR_CL_8BIT_MASK) >>
 				EXT_CSD_PWR_CL_8BIT_SHIFT;
     }
@@ -965,7 +965,7 @@ static int mmc_select_powerclass(struct mmc_card *card)
 
 	ddr = card->mmc_avail_type & EXT_CSD_CARD_TYPE_DDR_52;
 	if (ddr){
-        pr_err("XEAL: DDR\n");
+        //pr_err("XEAL: DDR\n");
 		ext_csd_bits = (bus_width == MMC_BUS_WIDTH_8) ?
 			EXT_CSD_DDR_BUS_WIDTH_8 : EXT_CSD_DDR_BUS_WIDTH_4;
     }else{
