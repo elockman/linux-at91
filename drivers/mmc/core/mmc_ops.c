@@ -568,12 +568,12 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
 
 	err = mmc_wait_for_cmd(host, &cmd, MMC_CMD_RETRIES);
 	if (err){
-        pr_err("XEAL OP-ERR: mmc_wait_for_cmd\n");
+//        pr_err("XEAL OP-ERR: mmc_wait_for_cmd\n");
 		goto out;
     }
 	/* No need to check card status in case of unblocking command */
 	if (!use_busy_signal){
-        pr_err("XEAL OP-ERR: use_busy_signal\n");
+//        pr_err("XEAL OP-ERR: use_busy_signal\n");
 		goto out;
     }
 
@@ -585,7 +585,7 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8 index, u8 value,
 	/* Let's try to poll to find out when the command is completed. */
 	err = mmc_poll_for_busy(card, timeout_ms, send_status, retry_crc_err);
 	if (err){
-        pr_err("XEAL OP-ERR: mmc_poll_for_busy\n");
+//        pr_err("XEAL OP-ERR: mmc_poll_for_busy\n");
 		goto out;
     }
 out_tim:
@@ -596,7 +596,7 @@ out_tim:
 	if (send_status) {
 		err = mmc_switch_status(card);
 		if (err && timing){
-            pr_err("XEAL OP-ERR: mmc_switch_status\n");
+//            pr_err("XEAL OP-ERR: mmc_switch_status\n");
 			mmc_set_timing(host, old_timing);
         }
 	}
