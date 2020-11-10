@@ -1459,7 +1459,7 @@ static int mmc_select_hs200(struct mmc_card *card)
 				   card->ext_csd.generic_cmd6_time, 0,
 				   true, false, true);
 		if (err){
-            	pr_err("XEAL ERR: mmc_select_bus_width\n")
+            	pr_err("XEAL ERR: mmc_select_bus_width\n");
                 goto err;
         }
 		old_timing = host->ios.timing;
@@ -1572,7 +1572,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	/* The extra bit indicates that we support high capacity */
 	err = mmc_send_op_cond(host, ocr | (1 << 30), &rocr);
 	if (err){
-       	pr_err("XEAL ERR: mmc_send_op_cond\n")
+       	pr_err("XEAL ERR: mmc_send_op_cond\n");
 		goto err;
     }
 	/*
@@ -1581,7 +1581,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	if (mmc_host_is_spi(host)) {
 		err = mmc_spi_set_crc(host, use_spi_crc);
 		if (err){
-            pr_err("XEAL ERR: mmc_spi_set_crc\n")
+            pr_err("XEAL ERR: mmc_spi_set_crc\n");
 			goto err;
         }
 	}
@@ -1591,7 +1591,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	 */
 	err = mmc_send_cid(host, cid);
 	if (err){
-        pr_err("XEAL ERR: mmc_send_cid\n")
+        pr_err("XEAL ERR: mmc_send_cid\n");
 		goto err;
     }
 	if (oldcard) {
@@ -1599,7 +1599,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 			pr_debug("%s: Perhaps the card was replaced\n",
 				mmc_hostname(host));
 			err = -ENOENT;
-            pr_err("XEAL ERR: mmc_hostname\n")
+            pr_err("XEAL ERR: mmc_hostname\n");
 			goto err;
 		}
 
@@ -1611,7 +1611,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 		card = mmc_alloc_card(host, &mmc_type);
 		if (IS_ERR(card)) {
 			err = PTR_ERR(card);
-            pr_err("XEAL ERR: mmc_alloc_card\n")
+            pr_err("XEAL ERR: mmc_alloc_card\n");
 			goto err;
 		}
 
@@ -2228,7 +2228,7 @@ int mmc_attach_mmc(struct mmc_host *host)
 	if (mmc_host_is_spi(host)) {
 		err = mmc_spi_read_ocr(host, 1, &ocr);
 		if (err){
-            pr_err("XEAL ERR: mmc_spi_read_ocr\n")
+            pr_err("XEAL ERR: mmc_spi_read_ocr\n");
 			goto err;
         }
 	}
@@ -2240,7 +2240,7 @@ int mmc_attach_mmc(struct mmc_host *host)
 	 */
 	if (!rocr) {
 		err = -EINVAL;
-        pr_err("XEAL ERR: rocr\n")
+        pr_err("XEAL ERR: rocr\n");
 		goto err;
 	}
 
@@ -2249,7 +2249,7 @@ int mmc_attach_mmc(struct mmc_host *host)
 	 */
 	err = mmc_init_card(host, rocr, NULL);
 	if (err){
-        pr_err("XEAL ERR: mmc_init_card\n")
+        pr_err("XEAL ERR: mmc_init_card\n");
 		goto err;
     }
 	mmc_release_host(host);
