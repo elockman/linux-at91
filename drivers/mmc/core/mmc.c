@@ -26,8 +26,8 @@
 #include "sd_ops.h"
 #include "pwrseq.h"
 
-#define DEFAULT_CMD6_TIMEOUT_MS	750 //500
-#define MIN_CACHE_EN_TIMEOUT_MS 2000//1600
+#define DEFAULT_CMD6_TIMEOUT_MS	1000 //500
+#define MIN_CACHE_EN_TIMEOUT_MS 3200//1600
 
 static const unsigned int tran_exp[] = {
 	10000,		100000,		1000000,	10000000,
@@ -368,7 +368,7 @@ static void mmc_manage_gp_partitions(struct mmc_card *card, u8 *ext_csd)
 }
 
 /* Minimum partition switch timeout in milliseconds */
-#define MMC_MIN_PART_SWITCH_TIME	300
+#define MMC_MIN_PART_SWITCH_TIME	600//300
 
 /*
  * Decode extended CSD.
@@ -449,7 +449,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 					1 << ext_csd[EXT_CSD_S_A_TIMEOUT];
 		card->ext_csd.erase_group_def =
 			ext_csd[EXT_CSD_ERASE_GROUP_DEF];
-		card->ext_csd.hc_erase_timeout = 300 *
+		card->ext_csd.hc_erase_timeout = 2 * 300 *
 			ext_csd[EXT_CSD_ERASE_TIMEOUT_MULT];
 		card->ext_csd.hc_erase_size =
 			ext_csd[EXT_CSD_HC_ERASE_GRP_SIZE] << 10;
@@ -500,7 +500,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 			ext_csd[EXT_CSD_SEC_ERASE_MULT];
 		card->ext_csd.sec_feature_support =
 			ext_csd[EXT_CSD_SEC_FEATURE_SUPPORT];
-		card->ext_csd.trim_timeout = 300 *
+		card->ext_csd.trim_timeout = 2 * 300 *
 			ext_csd[EXT_CSD_TRIM_MULT];
 
 		/*
@@ -569,7 +569,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 			 * a command interrupted by HPI
 			 */
 			card->ext_csd.out_of_int_time =
-				ext_csd[EXT_CSD_OUT_OF_INTERRUPT_TIME] * 10;
+				ext_csd[EXT_CSD_OUT_OF_INTERRUPT_TIME] * 2 * 10;
 		}
 
 		card->ext_csd.rel_param = ext_csd[EXT_CSD_WR_REL_PARAM];
@@ -599,9 +599,9 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 		//pr_err("XEAL: eMMC v4.5 or later.\n");
 		card->ext_csd.feature_support |= MMC_DISCARD_FEATURE;
 
-		card->ext_csd.generic_cmd6_time = 10 *
+		card->ext_csd.generic_cmd6_time = 2 * 10 *
 			ext_csd[EXT_CSD_GENERIC_CMD6_TIME];
-		card->ext_csd.power_off_longtime = 10 *
+		card->ext_csd.power_off_longtime = 2 * 10 *
 			ext_csd[EXT_CSD_POWER_OFF_LONG_TIME];
 
 		card->ext_csd.cache_size =
@@ -1860,7 +1860,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	 * DEFAULT_CACHE_EN_TIMEOUT_MS and do it for all cards.
 	 */
 	if (card->ext_csd.cache_size > 0) {
-		unsigned int timeout_ms = MIN_CACHE_EN_TIMEOUT_MS;
+		unsigned int timeout_ms = 2 * MIN_CACHE_EN_TIMEOUT_MS;
 
 		timeout_ms = max(card->ext_csd.generic_cmd6_time, timeout_ms);
 		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
@@ -1992,7 +1992,7 @@ static int mmc_sleep(struct mmc_host *host)
 	 * others) is invalid while the card sleeps.
 	 */
 	if (!cmd.busy_timeout || !(host->caps & MMC_CAP_WAIT_WHILE_BUSY))
-		mmc_delay(timeout_ms);
+		mmc_delay(2*timeout_ms);
 
 out_release:
 	mmc_retune_release(host);
