@@ -26,8 +26,8 @@
 #include "sd_ops.h"
 #include "pwrseq.h"
 
-#define DEFAULT_CMD6_TIMEOUT_MS	1000 //500
-#define MIN_CACHE_EN_TIMEOUT_MS 3200//1600
+#define DEFAULT_CMD6_TIMEOUT_MS	500
+#define MIN_CACHE_EN_TIMEOUT_MS 1600
 
 static const unsigned int tran_exp[] = {
 	10000,		100000,		1000000,	10000000,
@@ -98,7 +98,7 @@ static int mmc_decode_cid(struct mmc_card *card)
 	case 3: /* MMC v3.1 - v3.3 */
 		//pr_err("XEAL: MMC v3\n");
 	case 4: /* MMC v4 */
-		//pr_err("XEAL: MMC v4\n");
+		pr_err("XEAL: MMC v4\n");
 		card->cid.manfid	= UNSTUFF_BITS(resp, 120, 8);
 		card->cid.oemid		= UNSTUFF_BITS(resp, 104, 16);
 		card->cid.prod_name[0]	= UNSTUFF_BITS(resp, 96, 8);
@@ -197,21 +197,21 @@ static void mmc_select_card_type(struct mmc_card *card)
 
 	if (caps & MMC_CAP_MMC_HIGHSPEED &&
 	    card_type & EXT_CSD_CARD_TYPE_HS_26) {
-		//pr_err("XEAL: EXT_CSD_CARD_TYPE_HS_26\n");
+		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS_26\n");
 		hs_max_dtr = MMC_HIGH_26_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS_26;
 	}
 
 	if (caps & MMC_CAP_MMC_HIGHSPEED &&
 	    card_type & EXT_CSD_CARD_TYPE_HS_52) {
-		//pr_err("XEAL: EXT_CSD_CARD_TYPE_HS_52\n");
+		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS_52\n");
 		hs_max_dtr = MMC_HIGH_52_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS_52;
 	}
 
 	if (caps & (MMC_CAP_1_8V_DDR | MMC_CAP_3_3V_DDR) &&
 	    card_type & EXT_CSD_CARD_TYPE_DDR_1_8V) {
-		//pr_err("XEAL: EXT_CSD_CARD_TYPE_DDR_1_8V\n");
+		pr_err("XEAL: EXT_CSD_CARD_TYPE_DDR_1_8V\n");
 		hs_max_dtr = MMC_HIGH_DDR_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_DDR_1_8V;
 	}
@@ -368,7 +368,7 @@ static void mmc_manage_gp_partitions(struct mmc_card *card, u8 *ext_csd)
 }
 
 /* Minimum partition switch timeout in milliseconds */
-#define MMC_MIN_PART_SWITCH_TIME	600//300
+#define MMC_MIN_PART_SWITCH_TIME	300
 
 /*
  * Decode extended CSD.
@@ -449,7 +449,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 					1 << ext_csd[EXT_CSD_S_A_TIMEOUT];
 		card->ext_csd.erase_group_def =
 			ext_csd[EXT_CSD_ERASE_GROUP_DEF];
-		card->ext_csd.hc_erase_timeout = 2 * 300 *
+		card->ext_csd.hc_erase_timeout = 300 *
 			ext_csd[EXT_CSD_ERASE_TIMEOUT_MULT];
 		card->ext_csd.hc_erase_size =
 			ext_csd[EXT_CSD_HC_ERASE_GRP_SIZE] << 10;
@@ -500,7 +500,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 			ext_csd[EXT_CSD_SEC_ERASE_MULT];
 		card->ext_csd.sec_feature_support =
 			ext_csd[EXT_CSD_SEC_FEATURE_SUPPORT];
-		card->ext_csd.trim_timeout = 2 * 300 *
+		card->ext_csd.trim_timeout = 300 *
 			ext_csd[EXT_CSD_TRIM_MULT];
 
 		/*
@@ -596,7 +596,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 	/* eMMC v4.5 or later */
 	card->ext_csd.generic_cmd6_time = DEFAULT_CMD6_TIMEOUT_MS;
 	if (card->ext_csd.rev >= 6) {
-		//pr_err("XEAL: eMMC v4.5 or later.\n");
+		pr_err("XEAL: eMMC v4.5 or later.\n");
 		card->ext_csd.feature_support |= MMC_DISCARD_FEATURE;
 
 		card->ext_csd.generic_cmd6_time = 2 * 10 *
@@ -634,7 +634,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 
 	/* eMMC v5 or later */
 	if (card->ext_csd.rev >= 7) {
-		//pr_err("XEAL: eMMC v5 or later.\n");
+		pr_err("XEAL: eMMC v5 or later.\n");
 		memcpy(card->ext_csd.fwrev, &ext_csd[EXT_CSD_FIRMWARE_VERSION],
 		       MMC_FIRMWARE_LEN);
 		card->ext_csd.ffu_capable =
@@ -928,7 +928,7 @@ static int __mmc_select_powerclass(struct mmc_card *card,
 	}
 
 	if (bus_width & (EXT_CSD_BUS_WIDTH_8 | EXT_CSD_DDR_BUS_WIDTH_8)) {
-        //pr_err("XEAL: EXT_CSD_DDR_BUS_WIDTH_8\n");
+        pr_err("XEAL: EXT_CSD_DDR_BUS_WIDTH_8\n");
 		pwrclass_val = (pwrclass_val & EXT_CSD_PWR_CL_8BIT_MASK) >>
 				EXT_CSD_PWR_CL_8BIT_SHIFT;
     }
@@ -965,7 +965,7 @@ static int mmc_select_powerclass(struct mmc_card *card)
 
 	ddr = card->mmc_avail_type & EXT_CSD_CARD_TYPE_DDR_52;
 	if (ddr){
-        //pr_err("XEAL: DDR\n");
+        pr_err("XEAL: DDR\n");
 		ext_csd_bits = (bus_width == MMC_BUS_WIDTH_8) ?
 			EXT_CSD_DDR_BUS_WIDTH_8 : EXT_CSD_DDR_BUS_WIDTH_4;
     }else{
@@ -1860,7 +1860,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	 * DEFAULT_CACHE_EN_TIMEOUT_MS and do it for all cards.
 	 */
 	if (card->ext_csd.cache_size > 0) {
-		unsigned int timeout_ms = 2 * MIN_CACHE_EN_TIMEOUT_MS;
+		unsigned int timeout_ms = MIN_CACHE_EN_TIMEOUT_MS;
 
 		timeout_ms = max(card->ext_csd.generic_cmd6_time, timeout_ms);
 		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
@@ -1992,7 +1992,7 @@ static int mmc_sleep(struct mmc_host *host)
 	 * others) is invalid while the card sleeps.
 	 */
 	if (!cmd.busy_timeout || !(host->caps & MMC_CAP_WAIT_WHILE_BUSY))
-		mmc_delay(2*timeout_ms);
+		mmc_delay(timeout_ms);
 
 out_release:
 	mmc_retune_release(host);
