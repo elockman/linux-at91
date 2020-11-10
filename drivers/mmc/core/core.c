@@ -220,8 +220,8 @@ static void __mmc_start_request(struct mmc_host *host, struct mmc_request *mrq)
 	/* Assumes host controller has been runtime resumed by mmc_claim_host */
 	err = mmc_retune(host);
 	if (err) {
-		printk("mmc_core: retune error "
-		"0x%x\n", err);
+//		printk("mmc_core: retune error "
+//		"0x%x\n", err);
 		mrq->cmd->error = err;
 		mmc_request_done(host, mrq);
 		return;
@@ -241,8 +241,8 @@ static void __mmc_start_request(struct mmc_host *host, struct mmc_request *mrq)
 
 		if (tries == 0) {
 			mrq->cmd->error = -EBUSY;
-			printk("mmc_core: sdio_is_io_busy -EBUSY\n");
-
+//			printk("mmc_core: sdio_is_io_busy -EBUSY\n");
+//
 			mmc_request_done(host, mrq);
 			return;
 		}
@@ -254,7 +254,7 @@ static void __mmc_start_request(struct mmc_host *host, struct mmc_request *mrq)
 		 * Retry path could come through here without having waiting on
 		 * cmd_completion, so ensure it is reinitialised.
 		 */
-		printk("mmc_core: reinit\n");
+//		printk("mmc_core: reinit\n");
 		reinit_completion(&mrq->cmd_completion);
 	}
 
