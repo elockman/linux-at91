@@ -75,7 +75,9 @@ static int mmc_decode_cid(struct mmc_card *card)
 	 */
 	switch (card->csd.mmca_vsn) {
 	case 0: /* MMC v1.0 - v1.2 */
-	case 1: /* MMC v1.4 */
+		pr_err("XEAL: MMC v1.0 - v1.2\n");
+    case 1: /* MMC v1.4 */
+		pr_err("XEAL: MMC v1.4\n");
 		card->cid.manfid	= UNSTUFF_BITS(resp, 104, 24);
 		card->cid.prod_name[0]	= UNSTUFF_BITS(resp, 96, 8);
 		card->cid.prod_name[1]	= UNSTUFF_BITS(resp, 88, 8);
@@ -92,8 +94,11 @@ static int mmc_decode_cid(struct mmc_card *card)
 		break;
 
 	case 2: /* MMC v2.0 - v2.2 */
+		pr_err("XEAL: MMC v2\n");
 	case 3: /* MMC v3.1 - v3.3 */
+		pr_err("XEAL: MMC v3\n");
 	case 4: /* MMC v4 */
+		pr_err("XEAL: MMC v4\n");
 		card->cid.manfid	= UNSTUFF_BITS(resp, 120, 8);
 		card->cid.oemid		= UNSTUFF_BITS(resp, 104, 16);
 		card->cid.prod_name[0]	= UNSTUFF_BITS(resp, 96, 8);
@@ -192,56 +197,66 @@ static void mmc_select_card_type(struct mmc_card *card)
 
 	if (caps & MMC_CAP_MMC_HIGHSPEED &&
 	    card_type & EXT_CSD_CARD_TYPE_HS_26) {
+		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS_26\n");
 		hs_max_dtr = MMC_HIGH_26_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS_26;
 	}
 
 	if (caps & MMC_CAP_MMC_HIGHSPEED &&
 	    card_type & EXT_CSD_CARD_TYPE_HS_52) {
+		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS_52\n");
 		hs_max_dtr = MMC_HIGH_52_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS_52;
 	}
 
 	if (caps & (MMC_CAP_1_8V_DDR | MMC_CAP_3_3V_DDR) &&
 	    card_type & EXT_CSD_CARD_TYPE_DDR_1_8V) {
+		pr_err("XEAL: EXT_CSD_CARD_TYPE_DDR_1_8V\n");
 		hs_max_dtr = MMC_HIGH_DDR_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_DDR_1_8V;
 	}
 
 	if (caps & MMC_CAP_1_2V_DDR &&
 	    card_type & EXT_CSD_CARD_TYPE_DDR_1_2V) {
+		pr_err("XEAL: EXT_CSD_CARD_TYPE_DDR_1_2V\n");
 		hs_max_dtr = MMC_HIGH_DDR_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_DDR_1_2V;
 	}
 
 	if (caps2 & MMC_CAP2_HS200_1_8V_SDR &&
 	    card_type & EXT_CSD_CARD_TYPE_HS200_1_8V) {
+		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS200_1_8V\n");
 		hs200_max_dtr = MMC_HS200_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS200_1_8V;
 	}
 
 	if (caps2 & MMC_CAP2_HS200_1_2V_SDR &&
 	    card_type & EXT_CSD_CARD_TYPE_HS200_1_2V) {
+		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS200_1_2V\n");
 		hs200_max_dtr = MMC_HS200_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS200_1_2V;
 	}
 
 	if (caps2 & MMC_CAP2_HS400_1_8V &&
 	    card_type & EXT_CSD_CARD_TYPE_HS400_1_8V) {
+		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS400_1_8V\n");
 		hs200_max_dtr = MMC_HS200_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS400_1_8V;
 	}
 
 	if (caps2 & MMC_CAP2_HS400_1_2V &&
 	    card_type & EXT_CSD_CARD_TYPE_HS400_1_2V) {
+		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS400_1_2V\n");
 		hs200_max_dtr = MMC_HS200_MAX_DTR;
 		avail_type |= EXT_CSD_CARD_TYPE_HS400_1_2V;
 	}
 
 	if ((caps2 & MMC_CAP2_HS400_ES) &&
 	    card->ext_csd.strobe_support &&
-	    (avail_type & EXT_CSD_CARD_TYPE_HS400))
+	    (avail_type & EXT_CSD_CARD_TYPE_HS400)) {
+		pr_err("XEAL: EXT_CSD_CARD_TYPE_HS400\n");
 		avail_type |= EXT_CSD_CARD_TYPE_HS400ES;
+    }
 
 	card->ext_csd.hs_max_dtr = hs_max_dtr;
 	card->ext_csd.hs200_max_dtr = hs200_max_dtr;
@@ -581,6 +596,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 	/* eMMC v4.5 or later */
 	card->ext_csd.generic_cmd6_time = DEFAULT_CMD6_TIMEOUT_MS;
 	if (card->ext_csd.rev >= 6) {
+		pr_err("XEAL: eMMC v4.5 or later.\n");
 		card->ext_csd.feature_support |= MMC_DISCARD_FEATURE;
 
 		card->ext_csd.generic_cmd6_time = 10 *
@@ -618,6 +634,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 
 	/* eMMC v5 or later */
 	if (card->ext_csd.rev >= 7) {
+		pr_err("XEAL: eMMC v5 or later.\n");
 		memcpy(card->ext_csd.fwrev, &ext_csd[EXT_CSD_FIRMWARE_VERSION],
 		       MMC_FIRMWARE_LEN);
 		card->ext_csd.ffu_capable =
@@ -633,6 +650,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 
 	/* eMMC v5.1 or later */
 	if (card->ext_csd.rev >= 8) {
+		pr_err("XEAL: eMMC v5.1 or later.\n");
 		card->ext_csd.cmdq_support = ext_csd[EXT_CSD_CMDQ_SUPPORT] &
 					     EXT_CSD_CMDQ_SUPPORTED;
 		card->ext_csd.cmdq_depth = (ext_csd[EXT_CSD_CMDQ_DEPTH] &
@@ -666,8 +684,10 @@ static int mmc_read_ext_csd(struct mmc_card *card)
 		 * fail more gracefully. */
 		if ((err != -EINVAL)
 		 && (err != -ENOSYS)
-		 && (err != -EFAULT))
+		 && (err != -EFAULT)){
+            pr_err("XEAL: can't do the switch\n");
 			return err;
+        }
 
 		/*
 		 * High capacity cards should have this "magic" size
@@ -907,13 +927,16 @@ static int __mmc_select_powerclass(struct mmc_card *card,
 		return -EINVAL;
 	}
 
-	if (bus_width & (EXT_CSD_BUS_WIDTH_8 | EXT_CSD_DDR_BUS_WIDTH_8))
+	if (bus_width & (EXT_CSD_BUS_WIDTH_8 | EXT_CSD_DDR_BUS_WIDTH_8)) {
+        pr_err("XEAL: EXT_CSD_DDR_BUS_WIDTH_8\n");
 		pwrclass_val = (pwrclass_val & EXT_CSD_PWR_CL_8BIT_MASK) >>
 				EXT_CSD_PWR_CL_8BIT_SHIFT;
-	else
+    }
+	else {
+        pr_err("XEAL: EXT_CSD_PWR_CL_4BIT_MASK\n");
 		pwrclass_val = (pwrclass_val & EXT_CSD_PWR_CL_4BIT_MASK) >>
 				EXT_CSD_PWR_CL_4BIT_SHIFT;
-
+    }
 	/* If the power class is different from the default value */
 	if (pwrclass_val > 0) {
 		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
@@ -941,13 +964,15 @@ static int mmc_select_powerclass(struct mmc_card *card)
 		return 0;
 
 	ddr = card->mmc_avail_type & EXT_CSD_CARD_TYPE_DDR_52;
-	if (ddr)
+	if (ddr){
+        pr_err("XEAL: DDR\n");
 		ext_csd_bits = (bus_width == MMC_BUS_WIDTH_8) ?
 			EXT_CSD_DDR_BUS_WIDTH_8 : EXT_CSD_DDR_BUS_WIDTH_4;
-	else
+    }else{
+        pr_err("XEAL: NOT DDR\n");
 		ext_csd_bits = (bus_width == MMC_BUS_WIDTH_8) ?
 			EXT_CSD_BUS_WIDTH_8 :  EXT_CSD_BUS_WIDTH_4;
-
+    }
 	err = __mmc_select_powerclass(card, ext_csd_bits);
 	if (err)
 		pr_warn("%s: power class selection to bus width %d ddr %d failed\n",
