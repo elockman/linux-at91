@@ -1632,9 +1632,10 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	 */
 	if (!mmc_host_is_spi(host)) {
 		err = mmc_set_relative_addr(card);
-		if (err)
+		if (err){
+            pr_err("XEAL ERR: mmc_set_relative_addr\n");
 			goto free_card;
-
+        }
 		mmc_set_bus_mode(host, MMC_BUSMODE_PUSHPULL);
 	}
 
@@ -1643,16 +1644,21 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 		 * Fetch CSD from card.
 		 */
 		err = mmc_send_csd(card, card->raw_csd);
-		if (err)
+		if (err){
+            pr_err("XEAL ERR: mmc_send_csd\n");
 			goto free_card;
-
+        }
 		err = mmc_decode_csd(card);
-		if (err)
+		if (err){
+            pr_err("XEAL ERR: mmc_decode_csd\n");
 			goto free_card;
+        }
 		err = mmc_decode_cid(card);
-		if (err)
+		if (err){
+            pr_err("XEAL ERR: mmc_decode_cid\n");
 			goto free_card;
-	}
+        }
+    }
 
 	/*
 	 * handling only for cards supporting DSR and hosts requesting
@@ -1666,16 +1672,19 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	 */
 	if (!mmc_host_is_spi(host)) {
 		err = mmc_select_card(card);
-		if (err)
+		if (err){
+            pr_err("XEAL ERR: mmc_select_card\n");
 			goto free_card;
+        }
 	}
 
 	if (!oldcard) {
 		/* Read extended CSD. */
 		err = mmc_read_ext_csd(card);
-		if (err)
+		if (err){
+            pr_err("XEAL ERR: mmc_read_ext_csd\n");
 			goto free_card;
-
+        }
 		/*
 		 * If doing byte addressing, check if required to do sector
 		 * addressing.  Handle the case of <2GB cards needing sector
@@ -1695,9 +1704,10 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 				 EXT_CSD_ERASE_GROUP_DEF, 1,
 				 card->ext_csd.generic_cmd6_time);
 
-		if (err && err != -EBADMSG)
+		if (err && err != -EBADMSG){
+            pr_err("XEAL ERR: mmc_switch\n");
 			goto free_card;
-
+        }
 		if (err) {
 			err = 0;
 			/*
@@ -1726,8 +1736,10 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL, EXT_CSD_PART_CONFIG,
 				 card->ext_csd.part_config,
 				 card->ext_csd.part_time);
-		if (err && err != -EBADMSG)
+		if (err && err != -EBADMSG){
+            pr_err("XEAL ERR: mmc_switch2\n");
 			goto free_card;
+        }
 	}
 
 	/*
@@ -1738,9 +1750,10 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 				 EXT_CSD_POWER_OFF_NOTIFICATION,
 				 EXT_CSD_POWER_ON,
 				 card->ext_csd.generic_cmd6_time);
-		if (err && err != -EBADMSG)
+		if (err && err != -EBADMSG){
+            pr_err("XEAL ERR: mmc_switch3\n");
 			goto free_card;
-
+        }
 		/*
 		 * The err can be -EBADMSG or 0,
 		 * so check for success and update the flag
@@ -1761,24 +1774,30 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	 * Select timing interface
 	 */
 	err = mmc_select_timing(card);
-	if (err)
+	if (err){
+        pr_err("XEAL ERR: mmc_select_timing\n");
 		goto free_card;
-
+    }
 	if (mmc_card_hs200(card)) {
 		err = mmc_hs200_tuning(card);
-		if (err)
+		if (err){
+            pr_err("XEAL ERR: mmc_hs200_tuning\n");
 			goto free_card;
-
+        }
 		err = mmc_select_hs400(card);
-		if (err)
+		if (err){
+            pr_err("XEAL ERR: mmc_select_hs400\n");
 			goto free_card;
+        }
 	} else if (!mmc_card_hs400es(card)) {
 		/* Select the desired bus width optionally */
 		err = mmc_select_bus_width(card);
 		if (err > 0 && mmc_card_hs(card)) {
 			err = mmc_select_hs_ddr(card);
-			if (err)
+			if (err){
+                pr_err("XEAL ERR: mmc_select_hs_ddr\n");
 				goto free_card;
+            }
 		}
 	}
 
@@ -1794,8 +1813,10 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
 				EXT_CSD_HPI_MGMT, 1,
 				card->ext_csd.generic_cmd6_time);
-		if (err && err != -EBADMSG)
+		if (err && err != -EBADMSG){
+            pr_err("XEAL ERR: mmc_switch4\n");
 			goto free_card;
+        }
 		if (err) {
 			pr_warn("%s: Enabling HPI failed\n",
 				mmc_hostname(card->host));
@@ -1819,8 +1840,10 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 		timeout_ms = max(card->ext_csd.generic_cmd6_time, timeout_ms);
 		err = mmc_switch(card, EXT_CSD_CMD_SET_NORMAL,
 				EXT_CSD_CACHE_CTRL, 1, timeout_ms);
-		if (err && err != -EBADMSG)
+		if (err && err != -EBADMSG){
+            pr_err("XEAL ERR: mmc_switch5\n");
 			goto free_card;
+        }
 
 		/*
 		 * Only if no error, cache is turned on successfully.
@@ -1842,8 +1865,10 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 	card->ext_csd.cmdq_en = false;
 	if (card->ext_csd.cmdq_support && host->caps2 & MMC_CAP2_CQE) {
 		err = mmc_cmdq_enable(card);
-		if (err && err != -EBADMSG)
+		if (err && err != -EBADMSG){
+            pr_err("XEAL ERR: mmc_switch6\n");
 			goto free_card;
+        }
 		if (err) {
 			pr_warn("%s: Enabling CMDQ failed\n",
 				mmc_hostname(card->host));
@@ -1876,6 +1901,7 @@ static int mmc_init_card(struct mmc_host *host, u32 ocr,
 		pr_err("%s: Host failed to negotiate down from 3.3V\n",
 			mmc_hostname(host));
 		err = -EINVAL;
+        pr_err("XEAL ERR: MMC_CAP2_AVOID_3_3V\n");
 		goto free_card;
 	}
 
