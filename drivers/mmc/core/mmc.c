@@ -98,7 +98,7 @@ static int mmc_decode_cid(struct mmc_card *card)
 	case 3: /* MMC v3.1 - v3.3 */
 		//pr_err("XEAL: MMC v3\n");
 	case 4: /* MMC v4 */
-		pr_err("XEAL: MMC v4\n");
+		//pr_err("XEAL: MMC v4\n");
 		card->cid.manfid	= UNSTUFF_BITS(resp, 120, 8);
 		card->cid.oemid		= UNSTUFF_BITS(resp, 104, 16);
 		card->cid.prod_name[0]	= UNSTUFF_BITS(resp, 96, 8);
@@ -569,7 +569,7 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 			 * a command interrupted by HPI
 			 */
 			card->ext_csd.out_of_int_time =
-				ext_csd[EXT_CSD_OUT_OF_INTERRUPT_TIME] * 2 * 10;
+				ext_csd[EXT_CSD_OUT_OF_INTERRUPT_TIME] * 10;
 		}
 
 		card->ext_csd.rel_param = ext_csd[EXT_CSD_WR_REL_PARAM];
@@ -596,12 +596,12 @@ static int mmc_decode_ext_csd(struct mmc_card *card, u8 *ext_csd)
 	/* eMMC v4.5 or later */
 	card->ext_csd.generic_cmd6_time = DEFAULT_CMD6_TIMEOUT_MS;
 	if (card->ext_csd.rev >= 6) {
-		pr_err("XEAL: eMMC v4.5 or later.\n");
+		//pr_err("XEAL: eMMC v4.5 or later.\n");
 		card->ext_csd.feature_support |= MMC_DISCARD_FEATURE;
 
-		card->ext_csd.generic_cmd6_time = 2 * 10 *
+		card->ext_csd.generic_cmd6_time = 10 *
 			ext_csd[EXT_CSD_GENERIC_CMD6_TIME];
-		card->ext_csd.power_off_longtime = 2 * 10 *
+		card->ext_csd.power_off_longtime = 10 *
 			ext_csd[EXT_CSD_POWER_OFF_LONG_TIME];
 
 		card->ext_csd.cache_size =
